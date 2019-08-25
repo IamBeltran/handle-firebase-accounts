@@ -1,0 +1,45 @@
+{
+  "name": "handle-firebase-accounts",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Firebase account management application",
+  "keywords": [
+    "APP",
+    "ELECTRON",
+    "JAVASCRIPT",
+    "FIREBASE"
+  ],
+  "homepage": "https://github.com/IamBeltran/handle-firebase-accounts#readme",
+  "bugs": {
+    "url": "https://github.com/IamBeltran/handle-firebase-accounts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamBeltran/handle-firebase-accounts.git"
+  },
+  "license": "MIT",
+  "author": "Victor Giovanni Beltrán Rodríguez <beltran-victor@outlook.com> (https://vgbr-dev.blogspot.com)",
+  "contributors": [
+    "Victor Giovanni Beltrán Rodriguez <beltran-victor@outlook.com> (https://vgbr-dev.blogspot.com)"
+  ],
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {},
+  "engineStrict": false,
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [],
+  "analyze": true
+}
