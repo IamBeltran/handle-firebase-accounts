@@ -132,6 +132,7 @@ GLOBAL_*.md
 # SECTION: THIS PROJECT
 release/
 assets/
+!windows/assets/
 !gitkeep
 # !SECTION
 # =======================================================================================
