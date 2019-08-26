@@ -22,7 +22,7 @@
   "contributors": [
     "Victor Giovanni Beltrán Rodriguez <beltran-victor@outlook.com> (https://vgbr-dev.blogspot.com)"
   ],
-  "main": "index.js",
+  "main": "main.js",
   "directories": {
     "lib": "lib",
     "doc": "doc",
