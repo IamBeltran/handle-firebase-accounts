@@ -24,7 +24,7 @@ const url = require('url');
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ REQUIRE MY DEPENDENCIES MODULES.                                                  │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
-const webcontext = path.join(__dirname, '..', 'system', 'node-integration.js');
+const webcontext = path.join(__dirname, 'system', 'node-integration.js');
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ DESTRUCTURING DEPENDENCIES.                                                       │
