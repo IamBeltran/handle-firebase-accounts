@@ -33,7 +33,15 @@
     "test:mocha": "gulp test:simple",
     "quick:test": "cross-env NODE_ENV=test nodemon ./quick.test.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "electron-devtools-installer": "^2.2.4",
+    "electron-is-dev": "^1.1.0",
+    "electron-log": "^3.0.7",
+    "electron-reload": "^1.5.0",
+    "electron-store": "^4.0.0",
+    "electron-updater": "^4.1.2",
+    "node-notifier": "^5.4.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
