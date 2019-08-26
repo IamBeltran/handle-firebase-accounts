@@ -56,7 +56,7 @@ if (isDev) {
 let mainWindow;
 
 const startUrl = url.format({
-  pathname: path.join(__dirname, 'windows/index.html'),
+  pathname: path.join(__dirname, 'system/windows/index.html'),
   protocol: 'file:',
   slashes: true,
 });
