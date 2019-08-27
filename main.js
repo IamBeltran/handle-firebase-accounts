@@ -9,11 +9,6 @@
 const electron = require('electron');
 const isDev = require('electron-is-dev');
 const notifier = require('node-notifier');
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} = require('electron-devtools-installer');
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ REQUIRE NODEJS DEPENDENCIES MODULE.                                               │
@@ -51,12 +46,45 @@ if (isDev) {
 
 // !SECTION
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+// » Keep a global reference of the window object, if you don't, the window will
+// » be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let deleteUserWindow;
+let setUserWindow;
+let addUserWindow;
+let getUsersWindow;
 
+// » html file for mainWindow
 const mainUrl = url.format({
   pathname: path.join(__dirname, 'system/windows/index.html'),
+  protocol: 'file:',
+  slashes: true,
+});
+
+// » html file for deleteUserWindow
+const deleteUserUrl = url.format({
+  pathname: path.join(__dirname, 'system/windows/delete-user.html'),
+  protocol: 'file:',
+  slashes: true,
+});
+
+// » html file for setUserWindow
+const setUserUrl = url.format({
+  pathname: path.join(__dirname, 'system/windows/set-user.html'),
+  protocol: 'file:',
+  slashes: true,
+});
+
+// » html file for addUserWindow
+const addUserUrl = url.format({
+  pathname: path.join(__dirname, 'system/windows/add-user.html'),
+  protocol: 'file:',
+  slashes: true,
+});
+
+// » html file for getUsersWindow
+const getUsersUrl = url.format({
+  pathname: path.join(__dirname, 'system/windows/get-users.html'),
   protocol: 'file:',
   slashes: true,
 });
@@ -65,6 +93,7 @@ const mainUrl = url.format({
 //  │ DECLARATION OF AUXILIARY FUNCTIONS.                                               │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
 function createWindow() {
+  // » Create the mainWindow
   mainWindow = new BrowserWindow({
     width: 400,
     height: 650,
@@ -79,8 +108,84 @@ function createWindow() {
     },
   });
 
-  // Show the mainWindow when it is loaded and ready to show
+  // » Show the mainWindow when it is loaded and ready to show
   mainWindow.loadURL(mainUrl);
+
+  // » Create the deleteUserWindow
+  deleteUserWindow = new BrowserWindow({
+    width: 400,
+    height: 650,
+    titleBarStyle: 'hidden',
+    show: false,
+    icon: path.join(__dirname, 'assets/icons/64x64.png'),
+    resizable: false,
+    fullscreenable: false,
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: webcontext,
+    },
+  });
+
+  // » Show the deleteUserWindow when it is loaded and ready to show
+  deleteUserWindow.loadURL(deleteUserUrl);
+
+  // » Create the setUserWindow
+  setUserWindow = new BrowserWindow({
+    width: 400,
+    height: 650,
+    titleBarStyle: 'hidden',
+    show: false,
+    icon: path.join(__dirname, 'assets/icons/64x64.png'),
+    resizable: false,
+    fullscreenable: false,
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: webcontext,
+    },
+  });
+
+  // » Show the setUserWindow when it is loaded and ready to show
+  setUserWindow.loadURL(setUserUrl);
+
+  // » Create the addUserWindow
+  addUserWindow = new BrowserWindow({
+    width: 400,
+    height: 650,
+    titleBarStyle: 'hidden',
+    show: false,
+    icon: path.join(__dirname, 'assets/icons/64x64.png'),
+    resizable: false,
+    fullscreenable: false,
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: webcontext,
+    },
+  });
+
+  // » Show the addUserWindow when it is loaded and ready to show
+  addUserWindow.loadURL(addUserUrl);
+
+  // » Create the getUsersWindow
+  getUsersWindow = new BrowserWindow({
+    width: 400,
+    height: 650,
+    titleBarStyle: 'hidden',
+    show: false,
+    icon: path.join(__dirname, 'assets/icons/64x64.png'),
+    resizable: false,
+    fullscreenable: false,
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: webcontext,
+    },
+  });
+
+  // » Show the getUsersWindow when it is loaded and ready to show
+  getUsersWindow.loadURL(getUsersUrl);
 
   if (!isDev) {
     mainWindow.removeMenu();
@@ -88,25 +193,42 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.webContents.once('dom-ready', () => {
-      require('devtron').install();
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err));
-      installExtension(REDUX_DEVTOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err));
       mainWindow.webContents.openDevTools();
     });
   }
 
-  // Show the mainWindow when it is loaded and ready to show
+  // » Show the mainWindow when it is loaded and ready to show
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
 
-  // Show the mainWindow when it is loaded and ready to show
+  // » Hide the mainWindow when close window
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  // » Hide the deleteUserWindow when close window
+  deleteUserWindow.on('close', e => {
+    e.preventDefault();
+    deleteUserWindow.hide();
+  });
+
+  // » Hide the setUserWindow when close window
+  setUserWindow.on('close', e => {
+    e.preventDefault();
+    setUserWindow.hide();
+  });
+
+  // » Hide the addUserWindow when close window
+  addUserWindow.on('close', e => {
+    e.preventDefault();
+    addUserWindow.hide();
+  });
+
+  // » Hide the getUsersWindow when close window
+  getUsersWindow.on('close', e => {
+    e.preventDefault();
+    getUsersWindow.hide();
   });
 }
 
@@ -137,6 +259,26 @@ ipcMain.on('send-notification', (event, notification) => {
     title: notification.title,
     message: notification.message,
   });
+});
+
+// » button with id btn-delete-user
+ipcMain.on('show-window-delete-user', () => {
+  deleteUserWindow.show();
+});
+
+// » button with id btn-set-user
+ipcMain.on('show-window-set-user', () => {
+  setUserWindow.show();
+});
+
+// » button with id btn-add-user
+ipcMain.on('show-window-add-user', () => {
+  addUserWindow.show();
+});
+
+// » button with id btn-get-users
+ipcMain.on('show-window-get-users', () => {
+  getUsersWindow.show();
 });
 
 console.log(app.getPath('userData'));
