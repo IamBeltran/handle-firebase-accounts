@@ -55,7 +55,7 @@ if (isDev) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-const startUrl = url.format({
+const mainUrl = url.format({
   pathname: path.join(__dirname, 'system/windows/index.html'),
   protocol: 'file:',
   slashes: true,
@@ -66,8 +66,8 @@ const startUrl = url.format({
 //  └───────────────────────────────────────────────────────────────────────────────────┘
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 650,
     titleBarStyle: 'hidden',
     show: false,
     icon: path.join(__dirname, 'assets/icons/64x64.png'),
@@ -80,7 +80,7 @@ function createWindow() {
   });
 
   // Show the mainWindow when it is loaded and ready to show
-  mainWindow.loadURL(startUrl);
+  mainWindow.loadURL(mainUrl);
 
   if (!isDev) {
     mainWindow.removeMenu();
@@ -138,4 +138,5 @@ ipcMain.on('send-notification', (event, notification) => {
     message: notification.message,
   });
 });
+
 console.log(app.getPath('userData'));
