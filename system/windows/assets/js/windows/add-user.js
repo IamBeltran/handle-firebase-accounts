@@ -12,6 +12,7 @@ const { ipcRenderer } = window.electron;
 
 // » FUNCTION TO GET VALUES OF HTML ELEMENTS OF THE ADD USER
 // » AND SEND THE VALUES TO THE MAIN ELECTRON MODULE
+// » FOR ADD USER
 const doAddUser = async () => {
   const name = document.getElementById('displayName').value;
   const email = document.getElementById('email').value;
