@@ -15,13 +15,39 @@
 		<link type="text/css" rel="stylesheet" href="assets/css/style.css"/>
 		<!-- !SECTION -->
 
-		<title>Información de usuarios</title>
+		<title>Información de usuario</title>
 	</head>
 	<body>
 
 		<!-- SECTION: OUTER-WRAPPER -->
 		<div id="outer-wrapper" class="container">
-			<h3>GET USERS</h3>
+
+			<!-- SECTION: header-title -->
+			<header id="header-title" class="row">
+				<div class="col s12 grey darken-4 center-align">
+					<p class="flow-text">Lista de usuarios</p>
+				</div>
+			</header>
+			<!-- !SECTION -->
+
+			<!-- SECTION: users -->
+			<section id="section-users" class="row">
+				<table id="table-users" class="striped">
+					<thead>
+						<tr>
+								<th>Nombre</th>
+								<th>Email</th>
+								<th>Editar</th>
+								<th>Borrar</th>
+						</tr>
+					</thead>
+
+					<tbody id="tbody-users">
+
+					</tbody>
+				</table>
+			</section>
+			<!-- !SECTION -->
 		</div>
 		<!-- !SECTION -->
 
@@ -31,7 +57,7 @@
 		<!-- NOTE: materialize.min.js -->
 		<script type="text/javascript" src="assets/js/materialize/materialize.min.js"></script>
 
-		<!-- NOTE: get-users.js -->
+		<!-- NOTE: get-user.js -->
 		<script type="text/javascript" src="assets/js/windows/get-users.js"></script>
 		<!-- !SECTION -->
 
