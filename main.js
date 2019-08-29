@@ -20,11 +20,13 @@ const url = require('url');
 //  │ REQUIRE MY DEPENDENCIES MODULES.                                                  │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
 const webcontext = path.join(__dirname, 'system', 'node-integration.js');
+const authFirebase = require('./system/Firebase');
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ DESTRUCTURING DEPENDENCIES.                                                       │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
 const { app, BrowserWindow, ipcMain } = electron;
+const { addUser, getUsers, getUserByUID, setUser, deleteUser } = authFirebase;
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ DECLARATION OF CONSTANTS-VARIABLES.                                               │
@@ -43,27 +45,18 @@ if (isDev) {
 // !SECTION
 
 // SECTION: WORSPACE FOR PRODUCTION
-
 // !SECTION
 
 // » Keep a global reference of the window object, if you don't, the window will
 // » be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-let deleteUserWindow;
+let getUsersWindow;
 let setUserWindow;
 let addUserWindow;
-let getUsersWindow;
 
 // » html file for mainWindow
 const mainUrl = url.format({
   pathname: path.join(__dirname, 'system/windows/index.html'),
-  protocol: 'file:',
-  slashes: true,
-});
-
-// » html file for deleteUserWindow
-const deleteUserUrl = url.format({
-  pathname: path.join(__dirname, 'system/windows/delete-user.html'),
   protocol: 'file:',
   slashes: true,
 });
@@ -93,7 +86,8 @@ const getUsersUrl = url.format({
 //  │ DECLARATION OF AUXILIARY FUNCTIONS.                                               │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
 function createWindow() {
-  // » Create the mainWindow
+  // SECTION: mainWindow
+  // » Create mainWindow
   mainWindow = new BrowserWindow({
     width: 400,
     height: 650,
@@ -110,82 +104,6 @@ function createWindow() {
 
   // » Show the mainWindow when it is loaded and ready to show
   mainWindow.loadURL(mainUrl);
-
-  // » Create the deleteUserWindow
-  deleteUserWindow = new BrowserWindow({
-    width: 400,
-    height: 650,
-    titleBarStyle: 'hidden',
-    show: false,
-    icon: path.join(__dirname, 'assets/icons/64x64.png'),
-    resizable: false,
-    fullscreenable: false,
-    parent: mainWindow,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: webcontext,
-    },
-  });
-
-  // » Show the deleteUserWindow when it is loaded and ready to show
-  deleteUserWindow.loadURL(deleteUserUrl);
-
-  // » Create the setUserWindow
-  setUserWindow = new BrowserWindow({
-    width: 400,
-    height: 650,
-    titleBarStyle: 'hidden',
-    show: false,
-    icon: path.join(__dirname, 'assets/icons/64x64.png'),
-    resizable: false,
-    fullscreenable: false,
-    parent: mainWindow,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: webcontext,
-    },
-  });
-
-  // » Show the setUserWindow when it is loaded and ready to show
-  setUserWindow.loadURL(setUserUrl);
-
-  // » Create the addUserWindow
-  addUserWindow = new BrowserWindow({
-    width: 400,
-    height: 650,
-    titleBarStyle: 'hidden',
-    show: false,
-    icon: path.join(__dirname, 'assets/icons/64x64.png'),
-    resizable: false,
-    fullscreenable: false,
-    parent: mainWindow,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: webcontext,
-    },
-  });
-
-  // » Show the addUserWindow when it is loaded and ready to show
-  addUserWindow.loadURL(addUserUrl);
-
-  // » Create the getUsersWindow
-  getUsersWindow = new BrowserWindow({
-    width: 400,
-    height: 650,
-    titleBarStyle: 'hidden',
-    show: false,
-    icon: path.join(__dirname, 'assets/icons/64x64.png'),
-    resizable: false,
-    fullscreenable: false,
-    parent: mainWindow,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: webcontext,
-    },
-  });
-
-  // » Show the getUsersWindow when it is loaded and ready to show
-  getUsersWindow.loadURL(getUsersUrl);
 
   if (!isDev) {
     mainWindow.removeMenu();
@@ -206,30 +124,153 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+  // !SECTION
 
-  // » Hide the deleteUserWindow when close window
-  deleteUserWindow.on('close', e => {
-    e.preventDefault();
-    deleteUserWindow.hide();
-  });
+  // SECTION: addUserWindow
+  // » IPC Event show-window-add-user
+  ipcMain.on('show-window-add-user', () => {
+    if (!addUserWindow) {
+      // » Create the addUserWindow
+      addUserWindow = new BrowserWindow({
+        width: 400,
+        height: 650,
+        titleBarStyle: 'hidden',
+        show: false,
+        icon: path.join(__dirname, 'assets/icons/64x64.png'),
+        resizable: false,
+        fullscreenable: false,
+        parent: mainWindow,
+        webPreferences: {
+          nodeIntegration: false,
+          preload: webcontext,
+        },
+      });
 
-  // » Hide the setUserWindow when close window
-  setUserWindow.on('close', e => {
-    e.preventDefault();
-    setUserWindow.hide();
-  });
+      // » Show the addUserWindow when it is loaded and ready to show
+      addUserWindow.loadURL(addUserUrl);
 
-  // » Hide the addUserWindow when close window
-  addUserWindow.on('close', e => {
-    e.preventDefault();
-    addUserWindow.hide();
-  });
+      if (!isDev) {
+        addUserWindow.removeMenu();
+      }
 
-  // » Hide the getUsersWindow when close window
-  getUsersWindow.on('close', e => {
-    e.preventDefault();
-    getUsersWindow.hide();
+      // » Show the addUserWindow when it is loaded and ready to show
+      addUserWindow.once('ready-to-show', () => {
+        addUserWindow.show();
+      });
+
+      // » Hide the getUsersWindow when close window
+      addUserWindow.on('close', () => {
+        addUserWindow = null;
+      });
+    }
   });
+  // !SECTION
+
+  // SECTION: getUsersWindow
+  // » IPC Event show-window-get-users
+  ipcMain.on('show-window-get-users', () => {
+    if (!getUsersWindow) {
+      getUsersWindow = new BrowserWindow({
+        width: 600,
+        height: 650,
+        titleBarStyle: 'hidden',
+        show: false,
+        icon: path.join(__dirname, 'assets/icons/64x64.png'),
+        resizable: false,
+        fullscreenable: false,
+        parent: mainWindow,
+        webPreferences: {
+          nodeIntegration: false,
+          preload: webcontext,
+        },
+      });
+
+      // » Show the getUsersWindow when it is loaded and ready to show
+      getUsersWindow.loadURL(getUsersUrl);
+
+      if (!isDev) {
+        getUsersWindow.removeMenu();
+      }
+
+      // » Show the mainWindow when it is loaded and ready to show
+      getUsersWindow.once('ready-to-show', () => {
+        getUsersWindow.show();
+      });
+
+      // » Show the mainWindow when it is loaded and ready to show
+      getUsersWindow.once('show', async () => {
+        await getUsers()
+          .then(usersResult => {
+            getUsersWindow.webContents.send('get-users-send-success', {
+              usersResult,
+              operation: 'Se cargaron los usuarios',
+            });
+          })
+          .catch(error => {
+            getUsersWindow.webContents.send('get-users-send-error', error);
+          });
+      });
+
+      // » Hide the getUsersWindow when close window
+      getUsersWindow.on('close', () => {
+        getUsersWindow = null;
+      });
+    }
+  });
+  // !SECTION
+
+  // SECTION: setUserWindow
+  // » IPC Event show-window-set-user
+  ipcMain.on('show-window-set-user', (even, uid) => {
+    if (!setUserWindow) {
+      setUserWindow = new BrowserWindow({
+        width: 400,
+        height: 650,
+        titleBarStyle: 'hidden',
+        show: false,
+        icon: path.join(__dirname, 'assets/icons/64x64.png'),
+        resizable: false,
+        fullscreenable: false,
+        parent: mainWindow,
+        webPreferences: {
+          nodeIntegration: false,
+          preload: webcontext,
+        },
+      });
+    }
+
+    // » Show the getUsersWindow when it is loaded and ready to show
+    setUserWindow.loadURL(setUserUrl);
+
+    if (!isDev) {
+      setUserWindow.removeMenu();
+    }
+
+    // » Show the mainWindow when it is loaded and ready to show
+    setUserWindow.once('ready-to-show', () => {
+      setUserWindow.show();
+    });
+
+    // » Show the mainWindow when it is loaded and ready to show
+    setUserWindow.once('show', async () => {
+      await getUserByUID(uid)
+        .then(userRecord => {
+          setUserWindow.webContents.send('set-user-send-success', {
+            userRecord,
+            operation: 'Se cargo información del usuario',
+          });
+        })
+        .catch(error => {
+          setUserWindow.webContents.send('set-user-send-error', error);
+        });
+    });
+
+    // » Hide the getUsersWindow when close window
+    setUserWindow.on('close', () => {
+      setUserWindow = null;
+    });
+  });
+  // !SECTION
 }
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
@@ -261,24 +302,83 @@ ipcMain.on('send-notification', (event, notification) => {
   });
 });
 
-// » button with id btn-delete-user
-ipcMain.on('show-window-delete-user', () => {
-  deleteUserWindow.show();
+// » IPC Event add-user-send
+ipcMain.on('add-user-send', async (event, userInfo) => {
+  const { name: displayName, email, password } = userInfo;
+
+  await addUser({
+    displayName,
+    email,
+    password,
+  })
+    .then(async () => {
+      event.reply('add-user-reply-success', 'Se agrego usuario');
+      await getUsers()
+        .then(usersResult => {
+          getUsersWindow.webContents.send('get-users-send-success', {
+            usersResult,
+            operation: 'Se agrego usuario',
+          });
+        })
+        .catch(error => {
+          getUsersWindow.webContents.send('get-users-send-error', error);
+        });
+    })
+    .catch(error => {
+      event.reply('add-user-reply-error', error);
+    });
 });
 
-// » button with id btn-set-user
-ipcMain.on('show-window-set-user', () => {
-  setUserWindow.show();
+// » IPC Event delete-user-send
+ipcMain.on('delete-user-send', async (event, uid) => {
+  await deleteUser(uid)
+    .then(async () => {
+      if (getUsersWindow) {
+        await getUsers()
+          .then(usersResult => {
+            getUsersWindow.webContents.send('get-users-send-success', {
+              usersResult,
+              operation: 'Se elimino usuario',
+            });
+          })
+          .catch(error => {
+            getUsersWindow.webContents.send('get-users-send-error', error);
+          });
+      }
+    })
+    .catch(error => {
+      event.reply('delete-user-reply-error', error);
+    });
 });
 
-// » button with id btn-add-user
-ipcMain.on('show-window-add-user', () => {
-  addUserWindow.show();
-});
+// » IPC Event set-user-send
+ipcMain.on('set-user-send', async (event, userInfo) => {
+  const { name: displayName, email, password, uid } = userInfo;
 
-// » button with id btn-get-users
-ipcMain.on('show-window-get-users', () => {
-  getUsersWindow.show();
+  await setUser(uid, {
+    displayName,
+    email,
+    password,
+  })
+    .then(async () => {
+      event.reply('set-user-reply-success', 'Se actualizo información de usuario');
+
+      if (getUsersWindow) {
+        await getUsers()
+          .then(usersResult => {
+            getUsersWindow.webContents.send('get-users-send-success', {
+              usersResult,
+              operation: 'Se actualizo información de usuario',
+            });
+          })
+          .catch(error => {
+            getUsersWindow.webContents.send('get-users-send-error', error);
+          });
+      }
+    })
+    .catch(error => {
+      event.reply('set-user-reply-error', error);
+    });
 });
 
 console.log(app.getPath('userData'));
