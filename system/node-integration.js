@@ -14,6 +14,7 @@ const electron = require('electron');
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ REQUIRE MY DEPENDENCIES MODULES.                                                  │
 //  └───────────────────────────────────────────────────────────────────────────────────┘
+const AuthFirebase = require('./Firebase');
 
 //  ┌───────────────────────────────────────────────────────────────────────────────────┐
 //  │ DESTRUCTURING DEPENDENCIES.                                                       │
@@ -34,3 +35,4 @@ const electron = require('electron');
 //  ──[ EXPORT MODULE ]──────────────────────────────────────────────────────────────────
 window.__devtron = { require, process };
 window.electron = electron;
+window.AuthFirebase = AuthFirebase;
