@@ -21,7 +21,52 @@
 
 		<!-- SECTION: OUTER-WRAPPER -->
 		<div id="outer-wrapper" class="container">
-			<h3>ADD USER</h3>
+
+			<!-- SECTION: header-title -->
+			<header id="header-title" class="row">
+				<div class="col s12 grey darken-4 center-align">
+					<p class="flow-text">Agrega información de usuario</p>
+				</div>
+			</header>
+			<!-- !SECTION -->
+
+			<!-- SECTION: main-card -->
+			<main id="main-add-user" class="row">
+
+				<!-- SECTION: form-add-user -->
+				<form id="form-add-user" class="col s12">
+					<div class="row">
+						<div class="input-field col s12">
+							<i class="material-icons prefix">account_circle</i>
+							<input id="displayName" type="text" name="displayName" class="validate">
+							<label for="displayName">Nombre</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<i class="material-icons prefix">email</i>
+							<input id="email" type="email" name="email" class="validate">
+							<label for="email">Email</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<i class="material-icons prefix">lock</i>
+							<input id="password" type="password" name="password" class="validate">
+							<label for="password">Password</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<button type="button" class="btn waves-effect waves-light" name="action" onclick="doAddUser()">Salvar</button>
+						</div>
+					</div>
+				</form>
+				<!-- !SECTION -->
+
+			</main>
+			<!-- !SECTION -->
+
 		</div>
 		<!-- !SECTION -->
 
