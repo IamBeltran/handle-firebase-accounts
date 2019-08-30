@@ -60,6 +60,9 @@ ipcRenderer.on('get-users-send-success', (event, arg) => {
   const listUsers = document.getElementById('tbody-users');
 
   listUsers.innerHTML = userItems;
+  const progressElement = document.getElementById('progress-users');
+
+  progressElement.classList.add('hidden');
 });
 
 // » ERROR EVENT FOR GET USERS
